@@ -10,7 +10,7 @@ from utils.image_ops import (
     histogram_equalization,
     histogram_stretching,
     edge_detection,
-    image_to_bytes
+    image_to_bytes,
 )
 
 from utils.filters import add_noise, apply_filter
@@ -35,8 +35,17 @@ if uploaded_file:
 
     operation = st.sidebar.selectbox(
         "Choose operation",
-        ["None", "Grayscale", "Threshold", "Histogram Equalization", 
-         "Histogram Stretching", "Noise", "Filtering", "Edge Detection", "Segmentation"]
+        [
+            "None",
+            "Grayscale",
+            "Threshold",
+            "Histogram Equalization",
+            "Histogram Stretching",
+            "Noise",
+            "Filtering",
+            "Edge Detection",
+            "Segmentation",
+        ],
     )
 
     result = image
@@ -74,16 +83,17 @@ if uploaded_file:
 
     st.sidebar.download_button(
         "Download Result",
-        data=image_to_bytes(result if len(result.shape)==3 else np.stack([result]*3, axis=-1)),
+        data=image_to_bytes(
+            result if len(result.shape) == 3 else np.stack([result] * 3, axis=-1)
+        ),
         file_name="processed.png",
-        mime="image/png"
+        mime="image/png",
     )
 
     st.subheader("Histogram")
     gray = to_gray(image)
-    hist = cv2.calcHist([gray], [0], None, [256], [0,256])
+    hist = cv2.calcHist([gray], [0], None, [256], [0, 256])
     st.line_chart(hist)
 
 else:
     st.info("Upload an image to start processing")
-
