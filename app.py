@@ -18,7 +18,7 @@ from utils.segmentation import segmentation_kmeans
 
 st.set_page_config(page_title="Image Processing App", layout="wide")
 
-st.title("4th Year AI Engineering - Image Processing Mini Project")
+st.title("Image Processing Mini Project")
 
 uploaded_file = st.file_uploader("Upload an image", type=["jpg", "png", "jpeg"])
 
@@ -90,10 +90,31 @@ if uploaded_file:
         mime="image/png",
     )
 
-    st.subheader("Histogram")
-    gray = to_gray(image)
-    hist = cv2.calcHist([gray], [0], None, [256], [0, 256])
-    st.line_chart(hist)
+    st.subheader("Histograms")
+
+    # Convert both images to grayscale
+    gray_original = to_gray(image)
+
+    # Handle processed image (it might already be grayscale)
+    if len(result.shape) == 3:
+        gray_processed = to_gray(result)
+    else:
+        gray_processed = result
+
+    # Compute histograms
+    hist_original = cv2.calcHist([gray_original], [0], None, [256], [0, 256])
+    hist_processed = cv2.calcHist([gray_processed], [0], None, [256], [0, 256])
+
+    # Create columns for side-by-side display
+    col3, col4 = st.columns(2)
+
+    with col3:
+        st.subheader("Original Histogram")
+        st.line_chart(hist_original)
+
+    with col4:
+        st.subheader("Processed Histogram")
+        st.line_chart(hist_processed)
 
 else:
     st.info("Upload an image to start processing")
