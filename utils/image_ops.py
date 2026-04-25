@@ -7,10 +7,11 @@ import io
 def to_gray(img):
     if len(img.shape) == 2:
         return img
-    elif img.shape[2] == 3:
+    if img.shape[2] == 3:
         return cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
-    elif img.shape[2] == 4:
+    if img.shape[2] == 4:
         return cv2.cvtColor(img, cv2.COLOR_RGBA2GRAY)
+    return img
 
 
 def apply_threshold(img, thresh):
@@ -26,8 +27,11 @@ def histogram_equalization(img):
 
 def histogram_stretching(img):
     gray = to_gray(img)
-    min_val = np.min(gray)
-    max_val = np.max(gray)
+    min_val, max_val = np.min(gray), np.max(gray)
+
+    if max_val == min_val:
+        return gray
+
     stretched = (gray - min_val) * (255 / (max_val - min_val))
     return stretched.astype(np.uint8)
 

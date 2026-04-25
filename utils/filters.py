@@ -21,11 +21,13 @@ def add_noise(img, noise_type="gaussian", mean=0, std=25, prob=0.02):
     return np.clip(img, 0, 255).astype(np.uint8)
 
 
-import cv2
-import numpy as np
 
 def apply_filter(img, filter_type="mean", ksize=5, sigma=1.0):
-    
+
+    # enforce odd kernel size (VERY IMPORTANT for OpenCV)
+    if ksize % 2 == 0:
+        ksize += 1
+
     if filter_type == "mean":
         return cv2.blur(img, (ksize, ksize))
 
@@ -36,4 +38,4 @@ def apply_filter(img, filter_type="mean", ksize=5, sigma=1.0):
         return cv2.medianBlur(img, ksize)
 
     else:
-        return img
+        raise ValueError("filter_type must be 'mean', 'gaussian', or 'median'")
