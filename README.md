@@ -1,103 +1,204 @@
-# 🖼️ Image Processing Mini Project (Streamlit)
+# 🖼️ Image Processing App (Streamlit)
 
-A graphical image processing application built with **Python + Streamlit** for the 4th Year AI Engineering mini-project.
-
-It allows users to upload images and apply various image processing techniques such as filtering, segmentation, histogram operations, noise addition, and edge detection.
+A modular **image processing web application** built with **Python, OpenCV, NumPy, and Streamlit**.
+It provides a simple UI to apply classical image processing techniques such as filtering, edge detection, thresholding, noise addition, and histogram operations.
 
 ---
 
 ## 🚀 Features
 
-### 📥 Image Input
-- Upload images in JPG, PNG, JPEG formats
-- Display original image
+### 🎨 Image Processing Operations
 
-### 🎛️ Image Processing Operations
-- Grayscale conversion
-- Thresholding
-- Histogram Equalization
-- Histogram Stretching
-- Noise addition (Gaussian, Salt & Pepper)
-- Filtering (Blur, Median, Sharpen)
-- Edge Detection (Canny)
-- Segmentation (K-Means clustering)
+* Grayscale conversion
+* Histogram Equalization
+* Histogram Stretching
+* Thresholding:
+
+  * Single Threshold
+  * Double Threshold
+  * Otsu Thresholding
+* Noise generation:
+
+  * Gaussian noise
+  * Salt & Pepper noise
+* Filtering:
+
+  * Mean filter
+  * Gaussian filter
+  * Median filter
+* Edge Detection:
+
+  * Canny
+  * Sobel
+  * Prewitt
+  * Roberts
+  * Laplacian
+  * Laplacian of Gaussian (LoG)
+
+---
 
 ### 📊 Visualization
-- Histogram display of grayscale image
-- Real-time processing updates
+
+* Original vs Processed image comparison
+* Histogram visualization for intensity distribution
+
+---
 
 ### 💾 Export
-- Download processed image
+
+* Download processed images in PNG format
 
 ---
 
-## 🧰 Technologies Used
+## 🧠 Architecture (Modular Design)
 
-- Python
-- :contentReference[oaicite:0]{index=0}
-- :contentReference[oaicite:1]{index=1}
-- NumPy
-- Pillow (PIL)
-
----
-
-## 📁 Project Structure
+The project is structured in a **clean modular way**:
 
 ```
-
-app.py
-utils/
-│── image_ops.py
-│── filters.py
-│── segmentation.py
-README.md
-
-````
+project/
+│
+├── app.py                  # Main Streamlit application
+│
+├── ui/                    # UI logic (Streamlit controls)
+│   ├── edges.py
+│   ├── filters.py
+│   ├── noises.py
+│   ├── thresholds.py
+│   └── histograms.py
+│
+├── utils/                # Core image processing logic
+│   ├── edges.py
+│   ├── filters.py
+│   ├── noises.py
+│   ├── thresholds.py
+│   ├── histograms.py
+│   └── image_ops.py
+│
+└── README.md
+```
 
 ---
 
-## ▶️ Installation & Running
+## 🛠️ Tech Stack
 
-### 1. Install dependencies
+* Python 🐍
+* Streamlit ⚡
+* OpenCV 👁️
+* NumPy 🔢
+* PIL (Pillow) 🖼️
+
+---
+
+## 📦 Installation
+
+### 1. Clone the repository
+
 ```bash
-pip install streamlit opencv-python numpy pillow
-````
+git clone https://github.com/chihebabiza/Image-Processing-Mini-Project.git
+cd Image-Processing-Mini-Project
+```
 
-### 2. Run the app
+### 2. Create virtual environment (recommended)
+
+```bash
+python -m venv venv
+source venv/bin/activate   # Linux/Mac
+venv\Scripts\activate      # Windows
+```
+
+### 3. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## ▶️ Run the App
 
 ```bash
 streamlit run app.py
 ```
 
+Then open in browser:
+
+```
+http://localhost:8501
+```
+
 ---
 
-## 📌 How It Works
+## 🧩 How It Works
 
 1. Upload an image
-2. Select an operation from the sidebar
-3. Adjust parameters (if needed)
-4. View processed output instantly
-5. Download result if required
+2. Select an operation from the sidebar:
+
+   * Filtering
+   * Edge detection
+   * Noise addition
+   * Thresholding
+   * Histogram operations
+3. Adjust parameters dynamically
+4. View results instantly
+5. Download processed image
 
 ---
 
-## 🎯 Learning Outcomes
+## 📊 Example Workflow
 
-* Basic image processing techniques
-* Working with OpenCV in Python
-* Building interactive web apps using Streamlit
-* Modular project structure in Python
-
----
-
-## 👨‍🎓 Author
-
-Mini Project – 4th Year AI Engineering
-University of Sétif
+```
+Upload Image → Apply Gaussian Noise → Apply Median Filter → Detect Edges → View Histogram
+```
 
 ---
 
-## 📄 License
+## 🔥 Key Design Highlights
 
-For academic use only.
+### ✔ Modular UI separation
 
+Each operation has its own UI handler:
+
+* `apply_edge_ui`
+* `apply_filter_ui`
+* `apply_noise_ui`
+* `apply_threshold_ui`
+
+### ✔ Clean architecture
+
+* UI layer (`ui/`)
+* Logic layer (`utils/`)
+* Main controller (`app.py`)
+
+### ✔ Scalable design
+
+Easy to add new:
+
+* filters
+* edge detectors
+* segmentation methods
+* ML-based processing
+
+---
+
+## 🚀 Future Improvements
+
+* 🧠 Add segmentation (K-means, watershed)
+* ⚡ Parallel processing (NumPy / multiprocessing)
+* 🤖 Deep learning filters (denoising autoencoder)
+* 📱 REST API backend (FastAPI)
+* 🎨 Image pipeline builder (drag & drop operations)
+
+---
+
+## 👨‍💻 Author
+
+Developed as an **Image Processing Lab Project** using Streamlit and OpenCV.
+
+---
+
+## 📜 License
+
+This project is open-source and free to use for educational purposes.
+
+
+Just tell me 👍
