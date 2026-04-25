@@ -75,8 +75,20 @@ if uploaded_file:
             result = add_noise(image, noise_type="salt_pepper", prob=prob)
 
     elif operation == "Filtering":
-        filter_type = st.sidebar.selectbox("Filter", ["blur", "median", "sharpen"])
-        result = apply_filter(image, filter_type)
+
+        filter_type = st.sidebar.selectbox(
+            "Filter",
+            ["mean", "gaussian", "median"]
+        )
+
+        ksize = st.sidebar.slider("Kernel Size", 3, 15, 5, step=2)
+
+        if filter_type == "gaussian":
+            sigma = st.sidebar.slider("Sigma", 0.1, 5.0, 1.0)
+            result = apply_filter(image, filter_type, ksize, sigma=sigma)
+
+        else:
+            result = apply_filter(image, filter_type, ksize)
 
     elif operation == "Edge Detection":
         result = edge_detection(image)

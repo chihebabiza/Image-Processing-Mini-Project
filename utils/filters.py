@@ -21,15 +21,19 @@ def add_noise(img, noise_type="gaussian", mean=0, std=25, prob=0.02):
     return np.clip(img, 0, 255).astype(np.uint8)
 
 
-def apply_filter(img, filter_type="blur"):
-    if filter_type == "blur":
-        return cv2.GaussianBlur(img, (5, 5), 0)
+import cv2
+import numpy as np
+
+def apply_filter(img, filter_type="mean", ksize=5, sigma=1.0):
+    
+    if filter_type == "mean":
+        return cv2.blur(img, (ksize, ksize))
+
+    elif filter_type == "gaussian":
+        return cv2.GaussianBlur(img, (ksize, ksize), sigma)
 
     elif filter_type == "median":
-        return cv2.medianBlur(img, 5)
+        return cv2.medianBlur(img, ksize)
 
-    elif filter_type == "sharpen":
-        kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
-        return cv2.filter2D(img, -1, kernel)
-
-    return img
+    else:
+        return img
