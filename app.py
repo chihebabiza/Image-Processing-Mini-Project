@@ -12,7 +12,7 @@ from utils.image_ops import image_to_bytes,to_gray
 
 
 st.set_page_config(page_title="Image Processing App", layout="wide")
-st.title("Image Processing Lab")
+st.title("Image Processing App")
 
 
 @st.cache_data
