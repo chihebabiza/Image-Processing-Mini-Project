@@ -7,6 +7,7 @@ from utils.image_ops import (
     apply_threshold,
     apply_double_threshold,
     histogram_equalization,
+    apply_otsu_threshold,
     histogram_stretching,
     edge_detection,
     image_to_bytes,
@@ -63,14 +64,14 @@ if uploaded_file:
 
         mode = st.sidebar.selectbox(
             "Threshold Mode",
-            ["Single Threshold", "Double Threshold"]
+            ["Single Threshold", "Double Threshold", "Otsu"]
         )
 
         if mode == "Single Threshold":
             t = st.sidebar.slider("Threshold", 0, 255, 127)
             result = apply_threshold(image, t)
 
-        else:  # Double Threshold
+        elif mode == "Double Threshold":
             low = st.sidebar.slider("Low Threshold", 0, 255, 50)
             high = st.sidebar.slider("High Threshold", 0, 255, 150)
 
@@ -79,6 +80,10 @@ if uploaded_file:
                 st.sidebar.warning("Swapped values to keep low ≤ high")
 
             result = apply_double_threshold(image, low, high)
+
+        else:  # Otsu
+            result = apply_otsu_threshold(image)
+            st.sidebar.info("Otsu automatically selects the best threshold")
 
     elif operation == "Histogram Equalization":
         result = histogram_equalization(image)
