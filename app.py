@@ -9,7 +9,12 @@ from utils.image_ops import (
     histogram_equalization,
     apply_otsu_threshold,
     histogram_stretching,
-    edge_detection,
+    canny_edge,
+    sobel_edge,
+    laplacian_edge,
+    log_edge,
+    prewitt_edge,
+    roberts_edge,
     image_to_bytes,
 )
 from utils.utils import show_histograms
@@ -51,7 +56,6 @@ if uploaded_file:
             "Filtering",
             "Threshold",
             "Edge Detection",
-            "Segmentation",
         ],
     )
 
@@ -92,7 +96,37 @@ if uploaded_file:
         result = histogram_stretching(image)
 
     elif operation == "Edge Detection":
-        result = edge_detection(image)
+
+        method = st.sidebar.selectbox(
+            "Edge Method",
+            [
+                "Canny (default)",
+                "Sobel",
+                "Prewitt",
+                "Roberts",
+                "Laplacian",
+                "Laplacian of Gaussian (LoG)"
+            ]
+        )
+
+        if method == "Canny (default)":
+            result = canny_edge(image)
+
+        elif method == "Sobel":
+            result = sobel_edge(image)
+
+        elif method == "Prewitt":
+            result = prewitt_edge(image)
+
+        elif method == "Roberts":
+            result = roberts_edge(image)
+
+        elif method == "Laplacian":
+            result = laplacian_edge(image)
+
+        else:  # LoG
+            ksize = st.sidebar.slider("Gaussian Kernel Size", 3, 11, 5, step=2)
+            result = log_edge(image, ksize)
 
     elif operation == "Noise":
         noise_type = st.sidebar.selectbox("Noise Type", ["Gaussian", "Salt Pepper"])
@@ -114,10 +148,6 @@ if uploaded_file:
             result = apply_filter(image, f, k, sigma=sigma)
         else:
             result = apply_filter(image, f, k)
-
-    elif operation == "Segmentation":
-        k = st.sidebar.slider("Clusters", 2, 8, 3)
-        result = segmentation_kmeans(image, k)
 
     with col2:
         st.subheader("Processed")
