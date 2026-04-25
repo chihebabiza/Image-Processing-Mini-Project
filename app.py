@@ -23,13 +23,6 @@ def load_image(file):
 uploaded_file = st.file_uploader("Upload Image", type=["jpg", "png", "jpeg","tif","tiff"])
 
 if uploaded_file:
-    if "last_file" not in st.session_state:
-        st.session_state.last_file = uploaded_file.name
-        
-    if st.session_state.last_file != uploaded_file.name:
-        st.session_state.clear()
-        st.session_state.last_file = uploaded_file.name
-
     image = load_image(uploaded_file)
 
     col1, col2 = st.columns(2)
