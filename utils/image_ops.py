@@ -5,7 +5,12 @@ import io
 
 
 def to_gray(img):
-    return cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+    if len(img.shape) == 2:
+        return img
+    elif img.shape[2] == 3:
+        return cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+    elif img.shape[2] == 4:
+        return cv2.cvtColor(img, cv2.COLOR_RGBA2GRAY)
 
 
 def apply_threshold(img, thresh):

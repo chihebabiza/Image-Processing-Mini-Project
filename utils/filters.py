@@ -1,25 +1,22 @@
 import numpy as np
 import cv2
 
-
-def add_noise(img, noise_type="gaussian"):
+def add_noise(img, noise_type="gaussian", mean=0, std=25, prob=0.02):
     img = img.astype(np.float32)
 
     if noise_type == "gaussian":
-        noise = np.random.normal(0, 25, img.shape)
+        noise = np.random.normal(mean, std, img.shape)
         img = img + noise
 
     elif noise_type == "salt_pepper":
-        prob = 0.02
         salt = np.random.rand(*img.shape[:2]) < prob
         pepper = np.random.rand(*img.shape[:2]) < prob
 
-        if len(img.shape) == 3:
-            img[salt] = 255
-            img[pepper] = 0
-        else:
-            img[salt] = 255
-            img[pepper] = 0
+        img[salt] = 255
+        img[pepper] = 0
+
+    else:
+        raise ValueError("noise_type must be 'gaussian' or 'salt_pepper'")
 
     return np.clip(img, 0, 255).astype(np.uint8)
 
