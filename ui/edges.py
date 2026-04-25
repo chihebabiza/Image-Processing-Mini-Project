@@ -31,4 +31,6 @@ def apply_edge_ui(image):
 
     # LoG
     ksize = st.sidebar.slider("Gaussian Kernel Size", 3, 11, 5, step=2)
-    return log_edge(image, ksize)
+    sigma = st.sidebar.slider("Sigma", 0.5, 5.0, 1.0)
+
+    return log_edge(image, ksize, sigma)
