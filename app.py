@@ -65,7 +65,14 @@ if uploaded_file:
 
     elif operation == "Noise":
         noise_type = st.sidebar.selectbox("Noise Type", ["gaussian", "salt_pepper"])
-        result = add_noise(image, noise_type)
+
+        if noise_type == "gaussian":
+            std = st.sidebar.slider("Standard Deviation (σ)", 1, 100, 25)
+            result = add_noise(image, noise_type="gaussian", std=std)
+
+        elif noise_type == "salt_pepper":
+            prob = st.sidebar.slider("Noise Probability", 0.0, 0.2, 0.02)
+            result = add_noise(image, noise_type="salt_pepper", prob=prob)
 
     elif operation == "Filtering":
         filter_type = st.sidebar.selectbox("Filter", ["blur", "median", "sharpen"])
@@ -90,31 +97,32 @@ if uploaded_file:
         mime="image/png",
     )
 
-    st.subheader("Histograms")
+    show_hist = st.checkbox("Show Histograms")
+    if show_hist:
+        st.subheader("Histograms")
+        # Convert both images to grayscale
+        gray_original = to_gray(image)
 
-    # Convert both images to grayscale
-    gray_original = to_gray(image)
+        # Handle processed image (it might already be grayscale)
+        if len(result.shape) == 3:
+            gray_processed = to_gray(result)
+        else:
+            gray_processed = result
 
-    # Handle processed image (it might already be grayscale)
-    if len(result.shape) == 3:
-        gray_processed = to_gray(result)
-    else:
-        gray_processed = result
+        # Compute histograms
+        hist_original = cv2.calcHist([gray_original], [0], None, [256], [0, 256])
+        hist_processed = cv2.calcHist([gray_processed], [0], None, [256], [0, 256])
 
-    # Compute histograms
-    hist_original = cv2.calcHist([gray_original], [0], None, [256], [0, 256])
-    hist_processed = cv2.calcHist([gray_processed], [0], None, [256], [0, 256])
+        # Create columns for side-by-side display
+        col3, col4 = st.columns(2)
 
-    # Create columns for side-by-side display
-    col3, col4 = st.columns(2)
+        with col3:
+            st.subheader("Original Histogram")
+            st.line_chart(hist_original)
 
-    with col3:
-        st.subheader("Original Histogram")
-        st.line_chart(hist_original)
-
-    with col4:
-        st.subheader("Processed Histogram")
-        st.line_chart(hist_processed)
+        with col4:
+            st.subheader("Processed Histogram")
+            st.line_chart(hist_processed)
 
 else:
     st.info("Upload an image to start processing")
