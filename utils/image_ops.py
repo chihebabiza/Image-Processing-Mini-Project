@@ -19,6 +19,13 @@ def apply_threshold(img, thresh):
     _, th = cv2.threshold(gray, thresh, 255, cv2.THRESH_BINARY)
     return th
 
+def apply_double_threshold(img, low_thresh, high_thresh):
+    gray = to_gray(img)
+    
+    mask = cv2.inRange(gray, low_thresh, high_thresh)
+    
+    return mask
+
 
 def histogram_equalization(img):
     gray = to_gray(img)

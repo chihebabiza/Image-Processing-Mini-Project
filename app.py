@@ -5,6 +5,7 @@ from PIL import Image
 from utils.image_ops import (
     to_gray,
     apply_threshold,
+    apply_double_threshold,
     histogram_equalization,
     histogram_stretching,
     edge_detection,
@@ -59,8 +60,25 @@ if uploaded_file:
         result = to_gray(image)
 
     elif operation == "Threshold":
-        t = st.sidebar.slider("Threshold", 0, 255, 127)
-        result = apply_threshold(image, t)
+
+        mode = st.sidebar.selectbox(
+            "Threshold Mode",
+            ["Single Threshold", "Double Threshold"]
+        )
+
+        if mode == "Single Threshold":
+            t = st.sidebar.slider("Threshold", 0, 255, 127)
+            result = apply_threshold(image, t)
+
+        else:  # Double Threshold
+            low = st.sidebar.slider("Low Threshold", 0, 255, 50)
+            high = st.sidebar.slider("High Threshold", 0, 255, 150)
+
+            if low > high:
+                low, high = high, low
+                st.sidebar.warning("Swapped values to keep low ≤ high")
+
+            result = apply_double_threshold(image, low, high)
 
     elif operation == "Histogram Equalization":
         result = histogram_equalization(image)
@@ -72,9 +90,9 @@ if uploaded_file:
         result = edge_detection(image)
 
     elif operation == "Noise":
-        noise_type = st.sidebar.selectbox("Noise Type", ["gaussian", "salt_pepper"])
+        noise_type = st.sidebar.selectbox("Noise Type", ["Gaussian", "Salt Pepper"])
 
-        if noise_type == "gaussian":
+        if noise_type == "Gaussian":
             std = st.sidebar.slider("Sigma", 1, 100, 25)
             result = add_noise(image, "gaussian", std=std)
 
