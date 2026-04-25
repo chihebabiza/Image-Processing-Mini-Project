@@ -2,24 +2,13 @@ import streamlit as st
 import numpy as np
 from PIL import Image
 
-from utils.image_ops import (
-    to_gray,
-    apply_threshold,
-    apply_double_threshold,
-    histogram_equalization,
-    apply_otsu_threshold,
-    histogram_stretching,
-    canny_edge,
-    sobel_edge,
-    laplacian_edge,
-    log_edge,
-    prewitt_edge,
-    roberts_edge,
-    image_to_bytes,
-)
-from utils.utils import show_histograms
-from utils.filters import add_noise, apply_filter
-from utils.segmentation import segmentation_kmeans
+from utils.histograms import histogram_equalization, histogram_stretching
+from ui.noises import apply_noise_ui
+from ui.filters import apply_filter_ui
+from ui.edges import apply_edge_ui
+from ui.thresholds import apply_threshold_ui
+from ui.histograms import show_histograms
+from utils.image_ops import image_to_bytes,to_gray
 
 
 st.set_page_config(page_title="Image Processing App", layout="wide")
@@ -65,29 +54,7 @@ if uploaded_file:
         result = to_gray(image)
 
     elif operation == "Threshold":
-
-        mode = st.sidebar.selectbox(
-            "Threshold Mode",
-            ["Single Threshold", "Double Threshold", "Otsu"]
-        )
-
-        if mode == "Single Threshold":
-            t = st.sidebar.slider("Threshold", 0, 255, 127)
-            result = apply_threshold(image, t)
-
-        elif mode == "Double Threshold":
-            low = st.sidebar.slider("Low Threshold", 0, 255, 50)
-            high = st.sidebar.slider("High Threshold", 0, 255, 150)
-
-            if low > high:
-                low, high = high, low
-                st.sidebar.warning("Swapped values to keep low ≤ high")
-
-            result = apply_double_threshold(image, low, high)
-
-        else:  # Otsu
-            result = apply_otsu_threshold(image)
-            st.sidebar.info("Otsu automatically selects the best threshold")
+        result = apply_threshold_ui(image)
 
     elif operation == "Histogram Equalization":
         result = histogram_equalization(image)
@@ -96,58 +63,13 @@ if uploaded_file:
         result = histogram_stretching(image)
 
     elif operation == "Edge Detection":
-
-        method = st.sidebar.selectbox(
-            "Edge Method",
-            [
-                "Canny (default)",
-                "Sobel",
-                "Prewitt",
-                "Roberts",
-                "Laplacian",
-                "Laplacian of Gaussian (LoG)"
-            ]
-        )
-
-        if method == "Canny (default)":
-            result = canny_edge(image)
-
-        elif method == "Sobel":
-            result = sobel_edge(image)
-
-        elif method == "Prewitt":
-            result = prewitt_edge(image)
-
-        elif method == "Roberts":
-            result = roberts_edge(image)
-
-        elif method == "Laplacian":
-            result = laplacian_edge(image)
-
-        else:  # LoG
-            ksize = st.sidebar.slider("Gaussian Kernel Size", 3, 11, 5, step=2)
-            result = log_edge(image, ksize)
+        result = apply_edge_ui(image)
 
     elif operation == "Noise":
-        noise_type = st.sidebar.selectbox("Noise Type", ["Gaussian", "Salt Pepper"])
-
-        if noise_type == "Gaussian":
-            std = st.sidebar.slider("Sigma", 1, 100, 25)
-            result = add_noise(image, "gaussian", std=std)
-
-        else:
-            prob = st.sidebar.slider("Probability", 0.0, 0.2, 0.02)
-            result = add_noise(image, "salt_pepper", prob=prob)
+        result = apply_noise_ui(image)
 
     elif operation == "Filtering":
-        f = st.sidebar.selectbox("Filter", ["mean", "gaussian", "median"])
-        k = st.sidebar.slider("Kernel Size", 3, 15, 5, step=2)
-
-        if f == "gaussian":
-            sigma = st.sidebar.slider("Sigma", 0.1, 5.0, 1.0)
-            result = apply_filter(image, f, k, sigma=sigma)
-        else:
-            result = apply_filter(image, f, k)
+        result = apply_filter_ui(image)
 
     with col2:
         st.subheader("Processed")
