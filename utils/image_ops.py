@@ -7,11 +7,14 @@ import io
 def to_gray(img):
     if len(img.shape) == 2:
         return img
+
     if img.shape[2] == 3:
-        return cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+        return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
     if img.shape[2] == 4:
         return cv2.cvtColor(img, cv2.COLOR_RGBA2GRAY)
-    return img
+
+    raise ValueError("Unsupported image format")
 
 
 
